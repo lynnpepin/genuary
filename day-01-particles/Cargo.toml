@@ -9,7 +9,6 @@ edition = "2021"
 nannou = "0.18.1"
 rand = "0.8.5"
 
-
 # Enable a small amount of optimization in debug mode
 [profile.dev]
 opt-level = 1
