@@ -1,8 +1,10 @@
 //! Genuary 2024 Day 1
-//! Shamelessly based on https://github.com/djeedai/bevy_hanabi/blob/main/examples/expr.rs
-//! The entire effect, including the animation, runs on the GPU exclusively. The
-//! acceleration varies based on the simulation time by building an expression
-//! based on [`ExprWriter::time()`] then assigned to the [`AccelModifier`].
+//! The goal was learning, but after an hour of tinkering, I didn't learn much.
+//! I really just tinkered with this source:
+//! https://github.com/djeedai/bevy_hanabi/blob/main/examples/expr.rs
+//! 
+//! That's what dailie are for :) Let's shoor for something interesting by end of month.
+//! 
 
 use bevy::{
   core_pipeline::{
@@ -12,7 +14,6 @@ use bevy::{
   prelude::*,
 };
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
-
 use bevy_hanabi::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -40,17 +41,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   Ok(())
 }
 
-// Note:Tonemapping available:
-/*
-None,
-Reinhard,
-ReinhardLuminance,
-AcesFitted,
-AgX,
-SomewhatBoringDisplayTransform,
-TonyMcMapface,
-BlenderFilmic,
-*/
 
 fn setup(mut commands: Commands, mut effects: ResMut<Assets<EffectAsset>>) {
   commands.spawn((
@@ -75,17 +65,17 @@ fn setup(mut commands: Commands, mut effects: ResMut<Assets<EffectAsset>>) {
   // Set gradient over the lifetime of the particle
   let mut color_gradient = Gradient::new();
   for (t, (r, g, b, a)) in [
-    (0.0, (4.0, 4.0, 4.0, 1.0)),
-    (0.7, (0.0, 0.0, 4.0, 1.0)),
-    (1.0, (0.0, 0.0, 0.0, 0.0)),
+    (0.0, (0.0, 0.0, 0.0, 0.25)),
+    (0.0, (0.5, 0.5, 0.5, 0.75)),
+    (1.0, (4.0, 4.0, 4.0, 1.0)),
   ] {
     color_gradient.add_key(t, Vec4::new(r, g, b, a))
   }
 
   let mut size_gradient = Gradient::new();
   for (t, (w, l)) in [
-    (0.3, (0.2, 0.02)),
-    (1.0, (0.0, 0.0))
+    (0.5, (0.5, 0.125)),
+    (1.0, (0.0625, 0.016125))
   ] {
     size_gradient.add_key(t, Vec2::new(w, l));
   }
@@ -107,7 +97,9 @@ fn setup(mut commands: Commands, mut effects: ResMut<Assets<EffectAsset>>) {
   let radial = (pos - zero).normalized();
   let vertical = writer.lit(Vec3::Y * 4.);
   let anim = writer.time().sin() * writer.lit(6.) - writer.lit(6.);
-  let accel = radial * anim + vertical;
+  let accel = anim;
+  //let accel = radial * anim + vertical;
+
   let update_accel = AccelModifier::new(accel.expr());
 
   let init_pos = SetPositionCircleModifier {
