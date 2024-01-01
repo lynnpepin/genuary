@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.12.1"
+bevy-inspector-egui = "0.22.1"
+bevy_hanabi = "0.9"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
