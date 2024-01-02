@@ -3,6 +3,9 @@ use nannou::prelude::*;
 use rand::{Rng};
 const N: usize = 100;
 
+const MAX_TT: f64 = 10.0;
+const MAX_NN: usize = 600;
+
 fn main() {
   nannou::app(model)
     .update(update)
@@ -13,16 +16,19 @@ fn main() {
 // The state of our program
 #[derive(Debug)]
 struct Model {
-
+  rng: rand::rngs::ThreadRng,
+  tt: f64,
+  nn: usize,
 }
 
 
 // Model initializer
 fn model(app: &App) -> Model {
   let boundary = app.window_rect();
-  let mut rng = rand::thread_rng();
   Model {
-
+    rng: rand::thread_rng(),
+    tt: 0.0,
+    nn: 0.0
   }
 }
 
@@ -30,7 +36,15 @@ fn model(app: &App) -> Model {
 // Update model in-place 60 times a second
 fn update(app: &App, model: &mut Model, update: Update) {
   let boundary = app.window_rect();
-  let mut rng = rand::thread_rng();
+
+  // incremenet time counter and frame counter
+  model.tt += update.since_last.secs();
+  model.nn += 1;
+
+  // quit if tt > MAX_TT or nn > MAX_NN
+  if model.tt > MAX_TT || model.nn > MAX_NN {
+    app.quit();
+  }
 }
 
 
