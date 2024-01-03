@@ -2,7 +2,6 @@
 use nannou::prelude::*;
 use rand::{Rng};
 const N: usize = 100;
-
 const MAX_TT: f64 = 10.0;
 const MAX_NN: usize = 600;
 
@@ -20,8 +19,8 @@ struct Model {
   rng: rand::rngs::ThreadRng,
   tt: f64,
   nn: usize,
-  x: f32,
-  y: f32,
+  mouse_xs: Vec<f32>,
+  mouse_ys: Vec<f32>
 }
 
 
@@ -32,8 +31,8 @@ fn model(app: &App) -> Model {
     rng: rand::thread_rng(),
     tt: 0.0,
     nn: 0,
-    x: 0.0,
-    y: 0.0,
+    mouse_xs: vec![0.0, 0.0],
+    mouse_ys: vec![0.0, 0.0],
   }
 }
 
@@ -46,12 +45,11 @@ fn update(app: &App, model: &mut Model, update: Update) {
   model.tt += update.since_last.secs();
   model.nn += 1;
 
-  // quit if tt > MAX_TT or nn > MAX_NN
-  /*
-  if model.tt > MAX_TT || model.nn > MAX_NN {
-    app.quit();
-  }
-  */
+  model.mouse_xs = vec![app.mouse.x, model.mouse_xs[0]];
+  model.mouse_ys = vec![app.mouse.y, model.mouse_ys[0]];
+
+  // if model.tt > MAX_TT || model.nn > MAX_NN
+  // { app.quit(); }  
 }
 
  
@@ -59,10 +57,12 @@ fn update(app: &App, model: &mut Model, update: Update) {
 fn view(app: &App, model: &Model, frame: Frame){
   let draw = app.draw();
 
-  draw.ellipse()
-    .w(3.0).h(30.0)
-    .rgba(10.0, 10.0, 10.0, 1.0)
-    .x_y(app.mouse.x, app.mouse.y);
+  // draw line
+  draw.line()
+    .start(pt2(model.mouse_xs[0], model.mouse_ys[0]))
+    .end(pt2(model.mouse_xs[1], model.mouse_ys[1]))
+    .weight(3.0)
+    .color(WHITE);
 
   
   draw.to_frame(app, &frame).unwrap();
