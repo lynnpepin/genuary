@@ -10,6 +10,8 @@ fn main() {
   nannou::app(model)
     .update(update)
     .simple_window(view)
+    .size(512, 512)
+    .background_color(BLACK)
     .run();
 }
 
@@ -28,7 +30,7 @@ fn model(app: &App) -> Model {
   Model {
     rng: rand::thread_rng(),
     tt: 0.0,
-    nn: 0.0
+    nn: 0
   }
 }
 
@@ -42,9 +44,11 @@ fn update(app: &App, model: &mut Model, update: Update) {
   model.nn += 1;
 
   // quit if tt > MAX_TT or nn > MAX_NN
+  /*
   if model.tt > MAX_TT || model.nn > MAX_NN {
     app.quit();
   }
+  */
 }
 
 
@@ -54,6 +58,11 @@ fn view(app: &App, model: &Model, frame: Frame){
   let draw = app.draw();
   draw.background().color(BLACK);
   draw.to_frame(app, &frame).unwrap();
+  
+  // optional: output frame to "output_{nn}.png"
+  //let file_path = "output/".to_string() + &model.nn.to_string() + ".png";
+  //app.main_window().capture_frame(file_path);
+
 }
 
 // eof
