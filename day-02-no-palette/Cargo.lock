@@ -472,7 +472,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "day-xx-template"
+name = "day-02-template"
 version = "0.1.0"
 dependencies = [
  "nannou",

@@ -1,5 +1,9 @@
 cargo run --release
-rm output.mp4
+
+# rm output.mp4 if it exists
+if [ -f output.mp4 ]; then
+    rm output.mp4
+fi
 
 ffmpeg -framerate 60 \
        -i output/%d.png \
