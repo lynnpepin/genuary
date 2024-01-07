@@ -21,4 +21,8 @@ fn view(app: &App, frame: Frame) {
     .w_h(4.0, 4.0)
     .color(WHITE);
   draw.to_frame(app, &frame).unwrap();
+
+  app.main_window().capture_frame(
+    format!{"output/{}.png", app.elapsed_frames()}
+  );
 }
