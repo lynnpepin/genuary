@@ -62,8 +62,14 @@ fn view(app: &App, frame: Frame) {
             y1 = y2;
 
             // accumulate da, dr bias
-            da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) / 8.0;
-            dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) / 8.0;
+            da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) / 16.0;
+            dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) / 16.0;
+
+            // intermittent sharp changes in accumulated bias
+            if ss % 64 == 0 {
+              da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) * 8.0;
+              dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) * 8.0;
+            }
 
 
             // r, a += dr, da
@@ -80,7 +86,7 @@ fn view(app: &App, frame: Frame) {
             draw.line()
               .start(pt2(x1, y1))
               .end(pt2(x2, y2))
-              .weight(1.0/16.0)
+              .weight(1.0/4.0)
               .rgba(0.0, 0.0, 0.0, 1.0);
           }
         }
