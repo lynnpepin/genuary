@@ -472,7 +472,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "day-04-pixels"
+name = "day-03-droste"
 version = "0.1.0"
 dependencies = [
  "nannou",
