@@ -7,9 +7,11 @@ const N: usize = 100;
 const MAX_TT: f32 = 10.0;
 const MAX_NN: usize = 600;
 
+const WIDTH:  f32 = 720.0;
+
 fn main() {
   nannou::sketch(view)
-  .size(1024, 1024)
+  .size(WIDTH as u32, WIDTH as u32)
   .run();
 }
 
@@ -36,8 +38,10 @@ fn view(app: &App, frame: Frame) {
       for ky in 0.. 7 {
         // initialize values
         // middle point
-        let middle_x = (kx as f32) * 128.0 - 384.0;
-        let middle_y = (ky as f32) * 128.0 - 384.0;
+        //let middle_x = (kx as f32) * 128.0 - 384.0;
+        //let middle_y = (ky as f32) * 128.0 - 384.0;
+        let middle_x = WIDTH * ((kx as f32) * (1.0 / 8.0) - 3.0/8.0);
+        let middle_y = WIDTH * ((ky as f32) * (1.0 / 8.0) - 3.0/8.0);
 
         // cumulative bias in da, dr
         let mut da_cum = 0.0;
@@ -67,8 +71,8 @@ fn view(app: &App, frame: Frame) {
 
             // intermittent sharp changes in accumulated bias
             if ss % 64 == 0 {
-              da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) * 8.0;
-              dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) * 8.0;
+              da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) * 4.0;
+              dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) * 4.0;
             }
 
 
