@@ -2,7 +2,8 @@
 use nannou::prelude::*;
 use rand::prelude::*;
 
-const N: usize = 10000;
+const N: usize = 4000;
+const T: usize = 2000;
 //const S: f32   = 100;
 //const ds: f32  = 0.01;
 const MAX_TT: f32 = 10.0;
@@ -40,21 +41,23 @@ fn view(app: &App, frame: Frame) {
 
     let mut r: f32;
     let mut a: f32;
+    let mut x: f32;
+    let mut y: f32;
 
     // For each point...
+    let ds = 0.001;
     for ii in 0..N {
-      let (mut x, mut y) = (points[ii].0, points[ii].1);
-      let ds = 0.001;
+      (x, y) = (points[ii].0, points[ii].1);
 
-      for t in 0..5000 {
+      for t in 0..T {
         // Iterate a bit
         
         (r, a) = xy_to_polar(x, y);
-        r  += -r.sin()*ds;
-        a  += -ds/2.0;
+        r  += -r.sin()*ds*randrange(0.,1.);
+        a  += -ds/2.0*randrange(0.,1.);
         (x, y) = polar_to_xy(r, a);
-        x  += y.sin()*ds;
-        y  -= y*ds;
+        x  += y.sin()*ds*randrange(0.,1.);
+        y  -= y*ds*randrange(0.,1.);
 
 
         // Draw
