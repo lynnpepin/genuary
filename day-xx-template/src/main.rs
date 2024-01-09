@@ -6,6 +6,15 @@ const N: usize = 100;
 const MAX_TT: f32 = 10.0;
 const MAX_NN: usize = 600;
 
+// Useful functions I like
+fn xy_to_polar(x: f32, y: f32) -> (f32, f32) {
+  ((x.pow(2.0) + y.pow(2.0)).sqrt(), y.atan2(x))
+}
+
+fn polar_to_xy(r: f32, theta: f32) -> (f32, f32) {
+  (r * theta.cos(), r * theta.sin())
+}
+
 fn main() {
   nannou::app(model)
     .update(update)
