@@ -16,7 +16,7 @@ fn main() {
 }
 
 fn randrange(a: f32, b: f32) -> f32 {
-  rand::random::<f32>() * (b - a) - a
+  rand::random::<f32>() * (b - a) + a
 }
 
 // Render
@@ -66,13 +66,13 @@ fn view(app: &App, frame: Frame) {
             y1 = y2;
 
             // accumulate da, dr bias
-            da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) / 16.0;
-            dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) / 16.0;
+            da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) / 8.0;
+            dr_cum += randrange(-1.0, 1.0) * ds * (ky as f32).pow(0.5) / 4.0;
 
             // intermittent sharp changes in accumulated bias
             if ss % 64 == 0 {
-              da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(0.5) * 4.0;
-              dr_cum += randrange(-2.0, 1.0) * ds * (ky as f32).pow(0.5) * 4.0;
+              da_cum += randrange(-2.0, 1.0) * ds * (kx as f32).pow(1.5)*2.0;//.pow(0.5) * 8.0;
+              dr_cum += randrange(-1.0, 1.0) * ds * (ky as f32).pow(1.5)*6.0;//.pow(0.5) * 8.0;
             }
 
 
