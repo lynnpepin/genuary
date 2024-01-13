@@ -2,8 +2,9 @@
 use nannou::prelude::*;
 use rand::{Rng};
 const N: usize = 100;
+const WIDTH: f32 = 720.0;
 
-const MAX_TT: f32 = 10.0;
+const MAX_TT: f64 = 10.0;
 const MAX_NN: usize = 600;
 
 // Useful functions I like
@@ -19,9 +20,7 @@ fn main() {
   nannou::app(model)
     .update(update)
     .simple_window(view)
-    .size(512, 512)
-    .background_color(BLACK)
-    .run();
+    .size(WIDTH, WIDTH)
 }
 
 // The state of our program
@@ -53,11 +52,7 @@ fn update(app: &App, model: &mut Model, update: Update) {
   model.nn += 1;
 
   // quit if tt > MAX_TT or nn > MAX_NN
-  /*
-  if model.tt > MAX_TT || model.nn > MAX_NN {
-    app.quit();
-  }
-  */
+  //if model.tt > MAX_TT || model.nn > MAX_NN {app.quit();}
 }
 
 
