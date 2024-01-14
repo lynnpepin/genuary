@@ -1,6 +1,9 @@
 cargo run --release
 rm output.mp4
 
+# copy the last output png to ./final.png
+cp output/$(ls output | tail -n 1) final.png
+
 # rm output.mp4 if it exists
 if [ -f output.mp4 ]; then
     rm output.mp4

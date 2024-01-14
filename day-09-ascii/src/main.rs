@@ -1,7 +1,7 @@
 #![allow(dead_code, unused_variables, unused_mut, unused_imports)]
 use nannou::prelude::*;
 use rand::{Rng};
-const N: usize = 360;
+const N: usize = 80;
 const WIDTH: f32 = 720.0;
 const MAX_TT: f64 = 30.0;
 const MAX_NN: usize = 1200;
