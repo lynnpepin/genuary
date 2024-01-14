@@ -3,8 +3,8 @@ use nannou::prelude::*;
 use rand::{Rng};
 const N: usize = 80;
 const WIDTH: f32 = 720.0;
-const MAX_TT: f64 = 10.0;
-const MAX_NN: usize = 600;
+const MAX_TT: f64 = 30.0;
+const MAX_NN: usize = 1200;
 
 // Consts specific to this
 const ks: f32 = 42.0;  // spring constant
@@ -103,7 +103,7 @@ fn update(app: &App, model: &mut Model, update: Update) {
     println!("x={:.2} dx={:.2} ddx={:.2}", model.x[0], model.dx[0], model.ddx[0]);
   }
   // quit if tt > MAX_TT or nn > MAX_NN
-  //if model.tt > MAX_TT || model.nn > MAX_NN { app.quit(); }
+  if model.tt > MAX_TT || model.nn > MAX_NN { app.quit(); }
 
 }
 
@@ -126,6 +126,7 @@ fn view(app: &App, model: &Model, frame: Frame){
     x = WIDTH * (-0.5 + ((ii+1) as f32) / ((N as f32) + 1.0));
 
     // model.x = y displacement
+    /*
     draw.line()
       .start(pt2(x, 0.0))
       .end(pt2(x, model.x[ii]))
@@ -136,6 +137,15 @@ fn view(app: &App, model: &Model, frame: Frame){
       .x_y(x, model.x[ii])
       .radius(2.0)
       .color(BLACK);
+    */
+
+    if ii < N - 1 {
+      draw.line()
+        .start(pt2(x, model.x[ii]))
+        .end(pt2(WIDTH * (-0.5 + ((ii+2) as f32) / ((N as f32) + 1.0)), model.x[ii+1]))
+        .weight(1.0)
+        .color(BLACK);
+    }
   }
 
   // debug
