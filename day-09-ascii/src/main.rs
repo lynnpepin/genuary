@@ -1,19 +1,16 @@
 #![allow(dead_code, unused_variables, unused_mut, unused_imports)]
 use nannou::prelude::*;
 use rand::{Rng};
-
 const N: usize = 80;
 const WIDTH: f32 = 720.0;
-
 const MAX_TT: f64 = 10.0;
 const MAX_NN: usize = 600;
 
 // Consts specific to this
-const ks: f32 = 10.0;  // spring constant
-const kd: f32 = 0.5; // spring dampening constant
-
-const kp: f32 = 0.0005; // chance of raindrop
-const kr: f32 = 10000.00; // force of a raindrop
+const ks: f32 = 42.0;  // spring constant
+const kd: f32 = 0.69; // spring dampening constant
+const kp: f32 = 0.001337; // chance of raindrop
+const kr: f32 = 8008.135; // force of a raindrop
 const dt: f32 = 1./60.; // deltatime
 
 // Useful functions I like
@@ -42,6 +39,7 @@ struct Model {
   x:    [f32; N], // position
   dx:   [f32; N], // velocity
   ddx:  [f32; N], // acceleration
+  new_ddx: [f32; N], // used as placeholder
 }
 
 
@@ -55,9 +53,9 @@ fn model(app: &App) -> Model {
     x:    [0.0; N],
     dx:   [0.0; N],
     ddx:  [0.0; N],
+    new_ddx:   [0.0; N],
   }
 }
-
 
 // Update model in-place 60 times a second
 fn update(app: &App, model: &mut Model, update: Update) {
@@ -67,20 +65,43 @@ fn update(app: &App, model: &mut Model, update: Update) {
   model.tt += update.since_last.secs();
   model.nn += 1;
 
-  let mut raini: f32;
-
+  // Apply hookes law, add raindrops
   for ii in 0..N {
-    model.ddx[ii] = -ks * model.x[ii];
-    raini = model.rng.gen::<f32>();
+    model.ddx[ii] = - ks * model.x[ii];
     if model.rng.gen::<f32>() < kp {
       model.ddx[ii] -= kr
     };
+  }
+
+  // Convolve force to spread waves
+  
+  for ii in 0..N {
+    model.new_ddx[ii] = 0.0;
+    // for delta-i, convolution-ratio
+    for (di, cr) in [
+      //(-2i32, 0.05), (-1, 0.40), (0, 0.05), (1, 0.40), (2, 0.05)
+      //(-2i32, 0.01), (-1, 0.10), (0, 0.00), (1, 0.10), (2, 0.01)
+      (-3i32, 0.05), (-2, 0.1), (-1, 0.2), (0, 0.3), (1, 0.2), (2, 0.1), (3, 0.05)
+    ] {
+      if (ii as i32+ di) >= 0 && (ii as i32 + di) < N.try_into().unwrap() {
+        model.new_ddx[ii] += model.ddx[ii + di as usize] * cr;
+      }
+    }
+  }
+  
+
+
+  // Newtonian physics
+  for ii in 0..N {
+    model.ddx[ii] = model.new_ddx[ii];
 
     model.dx[ii] += model.ddx[ii] * dt;
     model.x[ii]  += model.dx[ii]  * dt * kd;
-
   }
 
+  if model.nn % 10 == 0 {
+    println!("x={:.2} dx={:.2} ddx={:.2}", model.x[0], model.dx[0], model.ddx[0]);
+  }
   // quit if tt > MAX_TT or nn > MAX_NN
   //if model.tt > MAX_TT || model.nn > MAX_NN { app.quit(); }
 
