@@ -1,7 +1,7 @@
 #![allow(dead_code, unused_variables, unused_mut, unused_imports)]
 use nannou::prelude::*;
 use rand::{Rng};
-const N: usize = 80;
+const N: usize = 360;
 const WIDTH: f32 = 720.0;
 const MAX_TT: f64 = 30.0;
 const MAX_NN: usize = 1200;
@@ -141,8 +141,8 @@ fn view(app: &App, model: &Model, frame: Frame){
 
     if ii < N - 1 {
       draw.line()
-        .start(pt2(x, model.x[ii]))
-        .end(pt2(WIDTH * (-0.5 + ((ii+2) as f32) / ((N as f32) + 1.0)), model.x[ii+1]))
+        .start(pt2(x, model.x[ii] * 12.))
+        .end(pt2(WIDTH * (-0.5 + ((ii+2) as f32) / ((N as f32) + 1.0)), model.x[ii+1] * 12.))
         .weight(1.0)
         .color(BLACK);
     }
@@ -152,8 +152,8 @@ fn view(app: &App, model: &Model, frame: Frame){
   draw.to_frame(app, &frame).unwrap();
   
   // optional: output frame to "output_{nn}.png"
-  //let file_path = "output/".to_string() + &model.nn.to_string() + ".png";
-  //app.main_window().capture_frame(file_path);
+  let file_path = "output/".to_string() + &model.nn.to_string() + ".png";
+  app.main_window().capture_frame(file_path);
 
 }
 
